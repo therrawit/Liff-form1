@@ -5,14 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ลงทะเบียนหอพัก</title>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <style>
+        body { font-family: 'Kanit', sans-serif; background-color: #f4f7f6; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        h2 { color: #333; margin-bottom: 20px; }
+        .form-container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 12px; background-color: #06c755; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        button:hover { background-color: #05a546; }
+        button:disabled { background-color: #ccc; }
+    </style>
 </head>
 <body>
-    <h2>กรอกข้อมูลลงทะเบียน</h2>
-    <input id="name" type="text" placeholder="ชื่อ-นามสกุล"><br>
-    <input id="phone" type="text" placeholder="เบอร์โทรศัพท์"><br>
-    <input id="room" type="text" placeholder="เลขห้อง"><br><br>
-    
-    <button id="submitBtn" onclick="sendData()">ส่งข้อมูล</button>
+    <div class="form-container">
+        <h2>📝 ลงทะเบียนเข้าพัก</h2>
+        <input id="name" type="text" placeholder="ชื่อ-นามสกุล">
+        <input id="phone" type="tel" placeholder="เบอร์โทรศัพท์">
+        <input id="room" type="text" placeholder="เลขห้อง">
+        <button id="submitBtn" onclick="sendData()">ส่งข้อมูล</button>
+    </div>
 
     <script>
         liff.init({ liffId: "2010383220-0xDJXGNM" }).then(() => {
@@ -21,8 +31,11 @@
 
         async function sendData() {
             const btn = document.getElementById('submitBtn');
+            // ตรวจสอบเบื้องต้น
+            if(!document.getElementById('name').value) return alert("กรุณากรอกชื่อครับ");
+            
             btn.disabled = true;
-            btn.innerText = "กำลังส่ง...";
+            btn.innerText = "กำลังบันทึก...";
 
             try {
                 const profile = await liff.getProfile();
