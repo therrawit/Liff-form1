@@ -15,34 +15,36 @@
     <button id="submitBtn" onclick="sendData()">ส่งข้อมูล</button>
 
     <script>
-        // เริ่มต้น LIFF
+        // ใส่ LIFF ID ของคุณที่นี่
         liff.init({ liffId: "2010383220-0xDJXGNM" }).then(() => {
             if (!liff.isLoggedIn()) { liff.login(); }
         });
 
         async function sendData() {
             const btn = document.getElementById('submitBtn');
-            btn.disabled = true; // ปิดปุ่มระหว่างส่งข้อมูล
+            btn.disabled = true;
             btn.innerText = "กำลังส่ง...";
 
             try {
                 const profile = await liff.getProfile();
                 
+                const data = new URLSearchParams();
+                data.append("name", document.getElementById('name').value);
+                data.append("phone", document.getElementById('phone').value);
+                data.append("room", document.getElementById('room').value);
+                data.append("userId", profile.userId);
+                
+                // ใส่ URL ของ Google Apps Script ของคุณที่นี่
                 await fetch("https://script.google.com/macros/s/AKfycbwwmG1UN9wmrqq2UsAhE-h52vXBnZH3WUK6FzEFrLAEzPqGI4_FQI3XKgbn4q2UuntS/exec", {
                     method: "POST",
                     mode: "no-cors",
-                    body: JSON.stringify({
-                        name: document.getElementById('name').value,
-                        phone: document.getElementById('phone').value,
-                        room: document.getElementById('room').value,
-                        userId: profile.userId
-                    })
+                    body: data 
                 });
                 
                 alert("บันทึกข้อมูลเรียบร้อย!");
                 liff.closeWindow();
             } catch (error) {
-                alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
+                alert("เกิดข้อผิดพลาด: " + error);
                 btn.disabled = false;
                 btn.innerText = "ส่งข้อมูล";
             }
