@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ลงทะเบียนหอพัก</title>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+    <h2>กรอกข้อมูลลงทะเบียน</h2>
+    <input id="name" type="text" placeholder="ชื่อ-นามสกุล"><br>
+    <input id="phone" type="text" placeholder="เบอร์โทรศัพท์"><br>
+    <input id="room" type="text" placeholder="เลขห้อง"><br><br>
+    
+    <button id="submitBtn" onclick="sendData()">ส่งข้อมูล</button>
+
+    <script>
+        // เริ่มต้น LIFF
+        liff.init({ liffId: "2010383220-0xDJXGNM" }).then(() => {
+            if (!liff.isLoggedIn()) { liff.login(); }
+        });
+
+        async function sendData() {
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true; // ปิดปุ่มระหว่างส่งข้อมูล
+            btn.innerText = "กำลังส่ง...";
+
+            try {
+                const profile = await liff.getProfile();
+                
+                await fetch("https://script.google.com/macros/s/AKfycbwwmG1UN9wmrqq2UsAhE-h52vXBnZH3WUK6FzEFrLAEzPqGI4_FQI3XKgbn4q2UuntS/exec", {
+                    method: "POST",
+                    mode: "no-cors",
+                    body: JSON.stringify({
+                        name: document.getElementById('name').value,
+                        phone: document.getElementById('phone').value,
+                        room: document.getElementById('room').value,
+                        userId: profile.userId
+                    })
+                });
+                
+                alert("บันทึกข้อมูลเรียบร้อย!");
+                liff.closeWindow();
+            } catch (error) {
+                alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
+                btn.disabled = false;
+                btn.innerText = "ส่งข้อมูล";
+            }
+        }
+    </script>
+</body>
+</html>
