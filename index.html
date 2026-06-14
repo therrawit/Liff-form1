@@ -15,7 +15,6 @@
     <button id="submitBtn" onclick="sendData()">ส่งข้อมูล</button>
 
     <script>
-        // ใส่ LIFF ID ของคุณที่นี่
         liff.init({ liffId: "2010383220-0xDJXGNM" }).then(() => {
             if (!liff.isLoggedIn()) { liff.login(); }
         });
@@ -27,14 +26,12 @@
 
             try {
                 const profile = await liff.getProfile();
-                
                 const data = new URLSearchParams();
                 data.append("name", document.getElementById('name').value);
                 data.append("phone", document.getElementById('phone').value);
                 data.append("room", document.getElementById('room').value);
                 data.append("userId", profile.userId);
                 
-                // ใส่ URL ของ Google Apps Script ของคุณที่นี่
                 await fetch("https://script.google.com/macros/s/AKfycbwwmG1UN9wmrqq2UsAhE-h52vXBnZH3WUK6FzEFrLAEzPqGI4_FQI3XKgbn4q2UuntS/exec", {
                     method: "POST",
                     mode: "no-cors",
